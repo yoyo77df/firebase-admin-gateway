@@ -80,7 +80,7 @@ function AdminPage() {
 
         <Tabs defaultValue="site" className="w-full">
           <TabsList className="flex flex-wrap h-auto glass p-1.5">
-            {["site","players","management","matches","achievements","highlights","gallery","news","socials","users"].map(t => (
+            {["site","players","management","matches","achievements","highlights","gallery","news","socials"].map(t => (
               <TabsTrigger key={t} value={t} className="capitalize">{t === "socials" ? "Team Socials" : t}</TabsTrigger>
             ))}
           </TabsList>
@@ -93,7 +93,7 @@ function AdminPage() {
           <TabsContent value="gallery"><CrudTable table="gallery_items" titleField="title" fields={galleryFields} /></TabsContent>
           <TabsContent value="news"><CrudTable table="news_posts" titleField="title" fields={newsFields} /></TabsContent>
           <TabsContent value="socials"><CrudTable table="social_links" titleField="platform" fields={socialFields} /></TabsContent>
-          <TabsContent value="users"><UsersEditor /></TabsContent>
+
         </Tabs>
       </main>
     </div>
