@@ -100,67 +100,8 @@ function AdminPage() {
   );
 }
 
-function UsersEditor() {
-  const qc = useQueryClient();
-  const { data, refetch } = useQuery({
-    queryKey: ["admin_users"],
-    queryFn: async () => {
-      const { data: profiles, error: pe } = await supabase.from("profiles").select("id, display_name, avatar_url, created_at").order("created_at", { ascending: false });
-      if (pe) throw pe;
-      const { data: roles, error: re } = await supabase.from("user_roles").select("user_id, role");
-      if (re) throw re;
-      const byUser = new Map<string, string[]>();
-      (roles ?? []).forEach((r) => {
-        const list = byUser.get(r.user_id) ?? [];
-        list.push(r.role);
-        byUser.set(r.user_id, list);
-      });
-      return (profiles ?? []).map((p) => ({ ...p, roles: byUser.get(p.id) ?? [] }));
-    },
-  });
 
-  const setRole = async (userId: string, role: "admin" | "moderator" | "user") => {
-    const { error: delErr } = await supabase.from("user_roles").delete().eq("user_id", userId);
-    if (delErr) { toast.error(delErr.message); return; }
-    const { error } = await supabase.from("user_roles").insert({ user_id: userId, role });
-    if (error) { toast.error(error.message); return; }
-    toast.success(`Role set to ${role}`);
-    qc.invalidateQueries({ queryKey: ["admin_users"] });
-    refetch();
-  };
 
-  return (
-    <div className="mt-6 space-y-3">
-      <p className="text-sm text-muted-foreground">Promote any registered user to admin or moderator. Changes apply on their next page load.</p>
-      <div className="glass rounded-xl divide-y divide-border/40">
-        {(data ?? []).map((u) => (
-          <div key={u.id} className="flex items-center justify-between p-3 gap-3 flex-wrap">
-            <div className="flex items-center gap-3 min-w-0">
-              {u.avatar_url ? <img src={u.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" /> : <div className="w-10 h-10 rounded-full bg-muted" />}
-              <div className="min-w-0">
-                <div className="font-display font-bold truncate">{u.display_name || u.id.slice(0, 8)}</div>
-                <div className="text-xs text-muted-foreground truncate">{u.id}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs uppercase tracking-widest text-[var(--neon)]">{u.roles.join(", ") || "user"}</span>
-              <select
-                className="bg-input rounded-md px-2 py-1.5 text-sm border border-border"
-                value={u.roles[0] ?? "user"}
-                onChange={(e) => setRole(u.id, e.target.value as "admin" | "moderator" | "user")}
-              >
-                <option value="user">user</option>
-                <option value="moderator">moderator</option>
-                <option value="admin">admin</option>
-              </select>
-            </div>
-          </div>
-        ))}
-        {(!data || data.length === 0) && <div className="p-8 text-center text-muted-foreground text-sm">No users yet.</div>}
-      </div>
-    </div>
-  );
-}
 
 function SocialsEditor({ value, onChange }: { value: Record<string, string>; onChange: (v: Record<string, string>) => void }) {
   const [platform, setPlatform] = useState("");
