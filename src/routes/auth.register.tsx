@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { firebaseAuth } from "@/integrations/firebase/client";
 import { Navbar } from "@/components/site/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,18 +28,16 @@ function RegisterPage() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const redirectTo = typeof window !== "undefined" ? window.location.origin : undefined;
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectTo,
-        data: { display_name: displayName || email.split("@")[0] },
-      },
-    });
-    setLoading(false);
-    if (error) toast.error(error.message);
-    else { toast.success("Account created."); nav({ to: "/" }); }
+    try {
+      const cred = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      if (displayName) await updateProfile(cred.user, { displayName });
+      toast.success("Account created.");
+      nav({ to: "/" });
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
