@@ -1,0 +1,2 @@
+ALTER TABLE public.matches ALTER COLUMN team_b DROP NOT NULL;
+ALTER TABLE public.matches ALTER COLUMN team_b SET DEFAULT '';

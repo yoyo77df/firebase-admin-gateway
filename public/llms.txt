@@ -1,0 +1,10 @@
+# RED EYES OFFICIAL
+
+> Premium esports organization. Roster, matches, achievements, highlights and news.
+
+## Pages
+
+- [Home](/): Overview, next match, featured roster, highlights and latest news.
+- [Roster](/roster): Active competitive players with profiles and stats.
+- [Management](/management): Staff and management team behind the organization.
+- [News](/news): Latest reports, announcements, and tournament coverage.

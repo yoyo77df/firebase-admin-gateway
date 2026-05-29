@@ -1,29 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Navbar } from "@/components/site/Navbar";
+import { Footer } from "@/components/site/Footer";
+import { Hero } from "@/components/site/Hero";
+import { RosterSection } from "@/components/site/RosterSection";
+import { AchievementsSection } from "@/components/site/AchievementsSection";
+import { HighlightsSection } from "@/components/site/HighlightsSection";
+import { GallerySection } from "@/components/site/GallerySection";
+import { NewsSection } from "@/components/site/NewsSection";
+import { ManagementSection } from "@/components/site/ManagementSection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "RED EYES OFFICIAL — Premium Esports Organization" },
+      { name: "description", content: "Dominate. Conquer. Reign. Meet the squad, watch the highlights, and follow the championships of RED EYES OFFICIAL." },
+      { property: "og:title", content: "RED EYES OFFICIAL — Premium Esports Organization" },
+      { property: "og:description", content: "Dominate. Conquer. Reign. Meet the squad, watch the highlights, and follow the championships of RED EYES OFFICIAL." },
+      { property: "og:url", content: "/" },
     ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
-  component: Index,
+  component: HomePage,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function HomePage() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen">
+      <Navbar />
+      <main>
+        <Hero />
+        <RosterSection limit={6} />
+        <ManagementSection />
+        <AchievementsSection />
+        <HighlightsSection />
+        <GallerySection />
+        <NewsSection limit={3} />
+      </main>
+      <Footer />
     </div>
   );
 }
